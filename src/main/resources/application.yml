@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: spring-cloud-gateway-sample
+  cloud:
+    gateway:
+      httpclient:
+        ssl:
+           use-insecure-trust-manager: true
+      routes:
+        - id: api1
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api1/**
+          filters:
+            - RewritePath=/api1/?(?<segment>.*), /$\{segment}
+        - id: api2
+          uri: https://localhost
+          predicates:
+            - Path=/api2/**
+          filters:
+            - RewritePath=/api2/?(?<segment>.*), /$\{segment}
+      redis-route-definition-repository:
+        enabled: true
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        exclude: "*"
